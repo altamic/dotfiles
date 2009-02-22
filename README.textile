@@ -1,0 +1,23 @@
+h1. User environment files
+
+h2. bash_profile
+
+Contains alias for common rails, git commands and some more.
+
+h2. irbrc
+
+Various features to make the ruby console more friendly.
+
+h2. Installation
+
+Rename each <tt>file</tt> to <tt>.file</tt> and place it under your home directory, possibly appending it to your existing <tt>.file</tt>.
+
+h2. Credits
+
+* John Neumaker for git function prompt
+* "Ryan Bates":http://github.com/ryanb for his "dotfiles":http://github.com/ryanb/dotfiles
+* Thoughtbot blog for "irbrc hints":http://giantrobots.thoughtbot.com/2008/12/23/script-console-tips
+
+h2. License
+
+Released under the terms specified in the license file.

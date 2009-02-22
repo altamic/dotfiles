@@ -1,0 +1,1 @@
+/Users/miky/.irbrc
