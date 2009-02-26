@@ -27,3 +27,27 @@ IRB.conf[:AUTO_INDENT]=true
 
 # pretty printing
 require 'pp'
+
+# Enable ri in irb
+def ri arg
+   puts `ri #{arg}`
+end
+
+class Module
+   def ri(meth=nil)
+     if meth
+       if instance_methods(false).include? meth.to_s
+         puts `ri #{self}##{meth}`
+       else
+         super
+       end
+     else
+       puts `ri #{self}`
+     end
+   end
+end
+# Now you can do:
+# irb> String.ri
+# irb> ri String  # same as above
+# irb> String.ri 'reverse'
+# irb> ri 'File.new'
