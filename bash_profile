@@ -60,7 +60,7 @@ alias ls='ls -G'
 
 # rubygems
 alias gemi='sudo gem install'
-alias gemu='sudo gem update'
+alias gemu='sudo gem update –no-ri –nor-rdoc'
 alias gems='gem search --remote'
 
 # rails
