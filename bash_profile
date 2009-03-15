@@ -77,3 +77,6 @@ alias rst="touch tmp/restart.txt"
 alias specc="spec -f s spec/controllers"
 alias specm="spec -f m spec/models"
 alias specmc="spec -f s spec/controllers; spec -f s spec/models"
+
+# tree command
+alias tree="ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'"
