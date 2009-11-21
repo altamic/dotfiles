@@ -105,3 +105,5 @@ alias ruby="ruby_or_irb"
 function isreg {
   dig soa $1 | grep -q ^$1 && echo "Yes" || echo "No"
 }
+
+alias flush="dscacheutil -flushcache"
