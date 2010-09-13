@@ -2,7 +2,7 @@ h1. User environment files
 
 h2. bash_profile
 
-Contains alias for common rails, git commands and some more.
+Contains common alias for rails, git commands and some more.
 
 h2. irbrc
 
@@ -14,9 +14,7 @@ Rename each <tt>file</tt> to <tt>.file</tt> and place it under your home directo
 
 h2. Credits
 
-* "John Nunemaker":http://railstips.org/ for "git function prompt":http://railstips.org/2009/2/2/bedazzle-your-bash-prompt-with-git-info
-* "Ryan Bates":http://github.com/ryanb for his "dotfiles":http://github.com/ryanb/dotfiles
-* Thoughtbot blog for "irbrc hints":http://giantrobots.thoughtbot.com/2008/12/23/script-console-tips
+Just look inside files.
 
 h2. License
 

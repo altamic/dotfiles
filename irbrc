@@ -11,9 +11,6 @@ require 'yaml'
 # vim-like quit
 alias q exit
 
-# auto indent
-IRB.conf[:AUTO_INDENT]=true
-
 # Easily print methods local to an object's class
 class Object
   def local_methods
@@ -36,13 +33,16 @@ ANSI[:CYAN]      = "\e[36m"
 ANSI[:WHITE]     = "\e[37m"
 
 # Build a simple colorful IRB prompt
+rvm_ruby = ENV['rvm_ruby_string'].to_s.gsub(/(^\w+\-(\d+\.?)+)/i).first || ''
+
 IRB.conf[:PROMPT][:SIMPLE_COLOR] = {
-  :PROMPT_I => "#{ANSI[:BLUE]}>>#{ANSI[:RESET]} ",
-  :PROMPT_N => "#{ANSI[:BLUE]}>>#{ANSI[:RESET]} ",
+  :PROMPT_I => "#{ANSI[:BLUE]}#{rvm_ruby}>>#{ANSI[:RESET]} ",
+  :PROMPT_N => "#{ANSI[:MAGENTA]}#{rvm_ruby}>>#{ANSI[:RESET]} ",
   :PROMPT_C => "#{ANSI[:RED]}?>#{ANSI[:RESET]} ",
   :PROMPT_S => "#{ANSI[:YELLOW]}?>#{ANSI[:RESET]} ",
   :RETURN   => "#{ANSI[:GREEN]}=>#{ANSI[:RESET]} %s\n",
   :AUTO_INDENT => true }
+
 IRB.conf[:PROMPT_MODE] = :SIMPLE_COLOR
 
 # Loading extensions of the console. This is wrapped
@@ -54,7 +54,7 @@ def extend_console(name, care = true, required = true)
     yield if block_given?
     $console_extensions << "#{ANSI[:GREEN]}#{name}#{ANSI[:RESET]}"
   else
-    $console_extensions << "#{ANSI[:GRAY]}#{name}#{ANSI[:RESET]}"
+    $console_extensions << "#{ANSI[:LGRAY]}#{name}#{ANSI[:RESET]}"
   end
 rescue LoadError
   $console_extensions << "#{ANSI[:RED]}#{name}#{ANSI[:RESET]}"
@@ -77,26 +77,7 @@ end
 # awesome_print prints prettier than pretty_print
 extend_console 'ap' do
   alias pp ap
-end
 
-# When you're using Rails 2 console, show queries in the console
-extend_console 'rails2', (ENV.include?('RAILS_ENV') && !Object.const_defined?('RAILS_DEFAULT_LOGGER')), false do
-  require 'logger'
-  RAILS_DEFAULT_LOGGER = Logger.new(STDOUT)
-end
-
-# When you're using Rails 3 console, show queries in the console
-extend_console 'rails3', defined?(ActiveSupport::Notifications), false do
-  $odd_or_even_queries = false
-  ActiveSupport::Notifications.subscribe('sql.active_record') do |*args|
-    $odd_or_even_queries = !$odd_or_even_queries
-    color = $odd_or_even_queries ? ANSI[:CYAN] : ANSI[:MAGENTA]
-    event = ActiveSupport::Notifications::Event.new(*args)
-    time  = "%.1fms" % event.duration
-    name  = event.payload[:name]
-    sql   = event.payload[:sql].gsub("\n", " ").squeeze(" ")
-    puts "  #{ANSI[:UNDERLINE]}#{color}#{name} (#{time})#{ANSI[:RESET]}  #{sql}"
-  end
 end
 
 # Add a method pm that shows every method on an object
@@ -133,9 +114,30 @@ extend_console 'pm', true, false do
   end
 end
 
-extend_console 'interactive_editor' do
+extend_console 'interactive_editor', true do
   # no configuration needed
 end
 
+# When you're using Rails 2 console, show queries in the console
+extend_console 'rails2', (ENV.include?('RAILS_ENV') && !Object.const_defined?('RAILS_DEFAULT_LOGGER')), false do
+  require 'logger'
+  RAILS_DEFAULT_LOGGER = Logger.new(STDOUT)
+end
+
+# When you're using Rails 3 console, show queries in the console
+extend_console 'rails3', defined?(ActiveSupport::Notifications), false do
+  $odd_or_even_queries = false
+  ActiveSupport::Notifications.subscribe('sql.active_record') do |*args|
+    $odd_or_even_queries = !$odd_or_even_queries
+    color = $odd_or_even_queries ? ANSI[:CYAN] : ANSI[:MAGENTA]
+    event = ActiveSupport::Notifications::Event.new(*args)
+    time  = "%.1fms" % event.duration
+    name  = event.payload[:name]
+    sql   = event.payload[:sql].gsub("\n", " ").squeeze(" ")
+    puts "  #{ANSI[:UNDERLINE]}#{color}#{name} (#{time})#{ANSI[:RESET]}  #{sql}"
+  end
+end
+
 # Show results of all extension-loading
-puts "#{ANSI[:GRAY]}~> Console extensions:#{ANSI[:RESET]} #{$console_extensions.join(' ')}#{ANSI[:RESET]}"
+puts "#{ANSI[:LGRAY]}~> Console extensions:#{ANSI[:RESET]} #{$console_extensions.join(' ')}#{ANSI[:RESET]}"
+
